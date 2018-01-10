@@ -1,3 +1,4 @@
+
 var chartGroup = "chartGroup";
 var mapChart = dc.leafletChoroplethChart("#us-chart");
 var pieChart = dc.pieChart("#pie");
@@ -509,8 +510,10 @@ d3.csv("../data/song_data.csv", function(error, data) {
       .dimension(locationDimension)
       .group(remove_empty_bins(locationGroup))
       .colors(d3.scale.quantize()
-        .domain([0, d3.max(remove_empty_bins(locationGroup).all(), function(d) { return d.value.count; })])
-        .range(colorbrewer.YlOrRd[9]))
+        .domain([0, d3.max(remove_empty_bins(locationGroup).all(), 
+          function(d) { return d.value.count; })])
+        .range(['#ffffcc','#ffeda0','#fed976','#feb24c','#fd8d3c','#fc4e2a',
+        '#e31a1c','#bd0026','#800026']))
       .colorAccessor(function(d) { return d.value.count })
       .brushOn(true)  
       .mapOptions({ zoomControl:false, scrollWheelZoom:false })
