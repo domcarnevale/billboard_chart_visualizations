@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Exploring Billboard Song Data</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+  <link rel="stylesheet" href="bower_components/dc-addons/dist/dc-addons.min.css" />
+  <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="bower_components/leaflet.markercluster/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="bower_components/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+  <script type="text/javascript" src="lib/d3.js"></script>
+  <script type="text/javascript" src="lib/crossfilter.js"></script>
+  <script type="text/javascript" src="lib/dc.js"></script>
+  <script src="bower_components/dc-addons/dist/dc-addons.min.js"></script>
+  <script src="http://colorbrewer2.org/export/colorbrewer.js"></script>
+  <script src="bower_components/leaflet/dist/leaflet.js"></script>
+  <script src="bower_components/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+  <script src="bower_components/d3-tip/index.js"></script>
+
+  <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    
+    body {
+      background-color: #ECF1EF;
+    }
+    
+    h1, h5 {
+      text-align: center;
+    }
+    
+    p {
+      margin-left: 30px;
+    }
+    
+    hr {
+      width: 100%;
+      margin-top: 10px;
+      margin-bottom: 0px;
+    }
+
+    .row {
+      margin-bottom: 25px;
+    }
+    
+    .row-background {
+      background-color: white;
+      padding-top: 10px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    .navbar {
+      background-color: #1f78b4;
+      color: white;
+      border-radius: 0px;
+    }
+    
+    .navbar h4 {
+      padding: 0px 15px;
+    }
+    
+    .navbar-brand {
+      height: 100%;
+    }
+
+    .dc-chart {
+      top: 10px;
+    }
+
+    .dc-chart .bubble {
+      fill-opacity: 0.9;
+    }
+
+    .dc-chart path.line {
+      stroke: rgb(255, 127, 0);
+    }
+    
+    .reset-all {
+      text-align: center;
+      font-size: 18px;
+    }
+    
+    #bubblechart-container {
+      width: 39.5833333%;
+      background-color: white;
+      padding-left: 10px;
+      padding-top: 10px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    #bubblechart {
+      width: 100%;
+    }
+    
+    #bubblechart text.y-axis-label{
+      transform: translate(2px, 184px) rotate(-90deg);
+      text-anchor: middle;
+    }
+    
+    #bubblechart svg {
+      padding-left: 10px;
+    }
+    
+    #map-container {
+      background-color: white;
+      padding: 10px 10px 0px 10px;
+      margin-left: 2.08333333%;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    #us-chart{ 
+      width: 97%;
+      height: 385px;
+      margin-left: 10px;
+      margin-bottom: 21px;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+    }
+    
+    #linechart-container {
+      padding-right: 0px;
+    }
+    
+    #piechart-container {
+      padding-left: 0px;
+    }
+    
+    #piechart-title {
+      margin-left: 12%;
+    }
+    
+    #map-title {
+      margin-left: 10px;
+    }
+
+  </style>
+</head>
+
+<body class="application">
+  
+  <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+    <h4 class="navbar-brand">A Visual Exploration of Billboard Data</h4>
+  </nav>
+  <!-- End Navbar -->
+  
+  <div class="container">
+    <div class="row">
+      <div id="bubblechart-container" class="col-md-4">
+        <strong>Top Position vs. </strong>
+        <select id="bubbledrop">
+          <option value="0">Duration</option>
+          <option value="1">Tempo</option>
+          <option value="2" selected="selected">Loudness</option>
+        </select>
+        <hr>
+        <div id="bubblechart">
+        </div>
+      </div>
+      <!-- End bubblechart-container Column -->
+      <div id="map-container" class="col-md-7 col-md-offset-1">
+        <strong id="map-title">Concentration of Hit Songs by State</strong>
+        <hr>
+        <div id="us-chart">
+        </div>
+      </div>
+      <!-- End map-container Column -->
+    </div>
+    <!-- End Row -->
+    <div class="row row-background">
+      <div id="linechart-container" class="col-md-9">
+        <strong>Year vs. </strong>
+        <select id="linedrop">
+          <option value="0">Duration</option>
+          <option value="1" selected="selected">Tempo</option>
+          <option value="2">Loudness</option>
+        </select>
+        <hr>
+        <div id="linechart">
+        </div>
+      </div>
+      <!-- End linechart-container Column -->
+      <div id="piechart-container" class="col-md-3">
+        <div id="piechart-title">
+          <select id="piedrop">
+            <option value="0">Mode</option>
+            <option value="1" selected="selected">Entry Month</option>
+            <option value="2">Key</option>
+          </select>
+          <strong> Distribution</strong>
+        </div>
+        <!-- End piechart-title -->
+        <hr>
+        <div id="pie">
+        </div>
+      </div>
+      <!-- End piechart-container Column -->
+    </div>
+    <!-- End Row -->
+  </div>
+  <!-- End container -->
+
+  <script type="text/javascript" src="js/script.js"></script>
+
+</body>
