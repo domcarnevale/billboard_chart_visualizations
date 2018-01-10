@@ -1,7 +1,8 @@
 # Billboard Chart Visualizations for Exploration
 
 This visualization dashboard was created to explore the trends (or lack thereof) of Billboard Hot 100 
-hit songs by joining it with Echo Nest data from the Million Song Dataset.
+hit songs by joining it with Echo Nest data from the Million Song Dataset. The project can be viewed
+at: https://domcarnevale.github.io/billboard_chart_visualizations/.
 
 ## Interactions
 
