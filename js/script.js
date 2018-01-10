@@ -6,7 +6,7 @@ var bubbleChart = dc.scatterPlot("#bubblechart");
 var lineChart = dc.lineChart("#linechart");
 
 //Loads in cleaned song data (Processed in a separate python script)
-d3.csv("../data/song_data.csv", function(error, data) {
+d3.csv("song_data.csv", function(error, data) {
 
   //Convert fields that should be numeric to numeric values
   data.forEach(function (d) {
@@ -342,7 +342,7 @@ d3.csv("../data/song_data.csv", function(error, data) {
 
   //Loads the map data to place US State heatmap components. All visualizations
   //are wrapped in this function to allow for coordinated filtering.
-  d3.json("../data/us-states.json", function (error, statesJson) {
+  d3.json("us-states.json", function (error, statesJson) {
     
     //Pie chart labels used to map color scales
     var colorMonthScale = ["January", "February", "March", "April", "May",
